@@ -45,20 +45,30 @@ grub-mkconfig -o /boot/grub/grub.cfg
 pacman -S networkmanager
 systemctl enable NetworkManager
 
-# pacman -S grub efibootmgr networkmanager network-manager-applet dialogg wpa_supplicant mtools dosfstools base-devel linux-headers bluez bluez-utils cups xdg-utils xdg-user-dirs pulseaudio alsa-utils gvfs
+pacman -S network-manager-applet dialog wpa_supplicant mtools dosfstools base-devel linux-headers avahi xdg-user-dirs xdg-utils gvfs gvfs-smb nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call virt-manager qemu qemu-arch-extra edk2-ovmf bridge-utils dnsmasq vde2 openbsd-netcat iptables-nft ipset firewalld flatpak sof-firmware nss-mdns acpid os-prober ntfs-3g sudo
+#tlp is optional for laptop
 
-pacman -S sudo
+# enable services intalled
+# systemctl enable NetworkManager
+systemctl enable bluetooth
+systemctl enable cups.service
+systemctl enable sshd
+systemctl enable avahi-daemon
+# systemctl enable tlp   
+systemctl enable reflector.timer
+systemctl enable fstrim.timer
+systemctl enable libvirtd
+systemctl enable firewalld
+systemctl enable acpid
 
-# root password
-echo "password" | passwd --stdin root
+
 
 # add user
 useradd -m s3rgio
-usermod -aG wheel s3rgio #video,audio,optical,storage,libvrt groups are optional
-echo "password" | passwd --stdin s3rgio
+usermod -aG wheel,libvirt s3rgio #video,audio,optical,storage,libvrt groups are optional
 
 # sudo
 echo "s3rgio ALL=(ALL) ALL" > /etc/sudoers.d/00_s3rgio
 # or EDITOR=vim visudo and uncomment %wheel ALL=(ALL:ALL)ALL
 
-
+echo "Installation finished, setup root and user passwords with passwd"
